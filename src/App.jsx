@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { nanoid } from "nanoid";
 import TasksList from "./components/TasksList";
 import Search from "./components/Search";
-//try and use zustand
+import { nanoid } from "nanoid";
 
 const App = () => {
   const [tasks, setTasks] = useState([
@@ -11,28 +10,35 @@ const App = () => {
       title: "First task",
       content: "This is my first task!",
       date: "15/04/2021",
-      status: "pending",
+      status: "Pending",
     },
     {
       id: nanoid(),
       title: "Second task",
       content: "This is my second task!",
       date: "21/04/2021",
-      status: "pending",
+      status: "Pending",
     },
     {
       id: nanoid(),
       title: "Third task",
       content: "This is my third task!",
       date: "28/04/2021",
-      status: "pending",
+      status: "Pending",
     },
     {
       id: nanoid(),
       title: "Fourth task",
       content: "This is my new task!",
       date: "30/04/2021",
-      status: "pending",
+      status: "Pending",
+    },
+    {
+      id: nanoid(),
+      title: "Fifth task",
+      content: "This is my final task!",
+      date: "30/04/2021",
+      status: "Pending",
     },
   ]);
 
@@ -50,50 +56,16 @@ const App = () => {
     localStorage.setItem("react-tasks-app-data", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = (title, content) => {
-    const date = new Date();
-    const newTask = {
-      id: nanoid(),
-      title: title,
-      content: content,
-      date: date.toLocaleDateString(),
-      status: "pending",
-    };
-    const newTasks = [...tasks, newTask];
-    setTasks(newTasks);
-  };
-
-  const deleteTask = (id) => {
-    const newTasks = tasks.filter((task) => task.id !== id);
-    setTasks(newTasks);
-  };
-
-  const editTask = (id, title, content) => {
-    const editedTaskList = tasks.map((task) => {
-      if (task.id === id) {
-        return { ...task, title: title, content: content };
-      }
-      return task;
-    });
-    setTasks(editedTaskList);
-  };
-
   return (
-    <div>
-      <div className="container">
-        <div className="header">
-          <h1>Tasks</h1>
-        </div>
-        <Search handleSearchTask={setSearchText} />
-        <TasksList
-          tasks={tasks.filter((task) =>
-            task.content.toLowerCase().includes(searchText)
-          )}
-          handleAddTask={addTask}
-          handleDeleteTask={deleteTask}
-          handleEditTask={editTask}
-        />
-      </div>
+    <div className="mx-auto px-4 sm:px-6 lg:px-8 min-h-screen">
+      <h1 className="text-center text-4xl my-5">React tasks app</h1>
+      <Search handleSearchTask={setSearchText} />
+      <TasksList
+        tasks={tasks.filter((task) =>
+          task.status.toLowerCase().includes(searchText)
+        )}
+        setTasks={setTasks}
+      />
     </div>
   );
 };
