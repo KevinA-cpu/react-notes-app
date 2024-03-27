@@ -1,9 +1,9 @@
-import { useState } from "react";
-import EditTask from "./EditTask";
-import { MdDeleteForever, MdEdit } from "react-icons/md";
-import DatePicker from "react-datepicker";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import "react-datepicker/dist/react-datepicker.css";
+import { useState } from 'react';
+import EditTask from './EditTask';
+import { MdDeleteForever, MdEdit } from 'react-icons/md';
+import DatePicker from 'react-datepicker';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const Task = ({
   id,
@@ -15,9 +15,11 @@ const Task = ({
   handleEditTask,
   handleToggleTaskStatus,
   handleSetDate,
+  handleStartTask,
+  handleCompletedTask,
 }) => {
   const [edit, setEdit] = useState(false);
-  const [day, month, year] = date.split("/");
+  const [day, month, year] = date.split('/');
   const startDate = new Date(year, month - 1, day);
 
   return (
@@ -41,26 +43,47 @@ const Task = ({
           </div>
           <div className="flex items-center justify-between">
             <div className="flex text-center items-center ">
-              <div className="flex items-center">
-                <DatePicker
-                  className="w-24 text-center bg-[#ffc800] rounded-lg border"
-                  dateFormat="dd/MM/yyyy"
-                  selected={startDate}
-                  onChange={(date) => handleSetDate(id, date)}
-                />
-                <MdKeyboardArrowDown className="text-2xl" />
+              <div className="flex flex-col">
+                <div className="flex items-center">
+                  <DatePicker
+                    className="w-24 text-center bg-[#ffc800] rounded-lg border"
+                    dateFormat="dd/MM/yyyy"
+                    selected={startDate}
+                    onChange={(date) => handleSetDate(id, date)}
+                  />
+                  <MdKeyboardArrowDown className="text-2xl" />
+                </div>
+                <label className="mr-4 mt-2">
+                  <input
+                    className="mr-1"
+                    type="checkbox"
+                    checked={status === 'Completed'}
+                    onChange={() => handleCompletedTask(id)}
+                  />
+                  Completed
+                </label>
               </div>
               <span className="mx-2">-</span>
-              <button
-                onClick={() => handleToggleTaskStatus(id)}
-                className={`min-w-[120px] text-white font-bold py-2 px-4 rounded-xl ${
-                  status === "Pending"
-                    ? "bg-orange-500 hover:bg-orange-600 animate-pulse"
-                    : "bg-green-500 hover:bg-green-600"
-                }`}
-              >
-                {status}
-              </button>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={() => handleToggleTaskStatus(id)}
+                  className={`min-w-[120px] text-white font-bold py-2 px-4 rounded-xl ${
+                    status === 'Incomplete'
+                      ? 'bg-orange-500 hover:bg-orange-600 animate-pulse'
+                      : status === 'In-progress'
+                      ? 'bg-yellow-500 hover:bg-yellow-600 animate-pulse'
+                      : 'bg-green-500 hover:bg-green-600'
+                  }`}
+                >
+                  {status}
+                </button>
+                <button
+                  onClick={() => handleStartTask(id)}
+                  className="my-2 min-w-[120px] text-white font-bold py-2 px-4 rounded-xl bg-blue-500 hover:bg-blue-600"
+                >
+                  Start
+                </button>
+              </div>
             </div>
             <div className="flex gap-2 ml-2">
               <MdEdit

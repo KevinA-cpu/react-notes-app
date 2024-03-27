@@ -1,7 +1,7 @@
-import Task from "./Task";
-import AddTask from "./AddTask";
-import { ListManager } from "react-beautiful-dnd-grid";
-import { nanoid } from "nanoid";
+import Task from './Task';
+import AddTask from './AddTask';
+import { ListManager } from 'react-beautiful-dnd-grid';
+import { nanoid } from 'nanoid';
 
 const TasksList = ({ tasks, setTasks }) => {
   const addTask = (title, content) => {
@@ -9,8 +9,8 @@ const TasksList = ({ tasks, setTasks }) => {
       id: nanoid(),
       title: title,
       content: content,
-      date: "01/01/2023",
-      status: "Pending",
+      date: '01/01/2023',
+      status: 'Incomplete',
     };
     const newTasks = [...tasks, newTask];
     setTasks(newTasks);
@@ -18,6 +18,11 @@ const TasksList = ({ tasks, setTasks }) => {
 
   const deleteTask = (id) => {
     const newTasks = tasks.filter((task) => task.id !== id);
+    setTasks(newTasks);
+  };
+
+  const deleteAllCompletedTasks = () => {
+    const newTasks = tasks.filter((task) => task.status !== 'Completed');
     setTasks(newTasks);
   };
 
@@ -31,13 +36,47 @@ const TasksList = ({ tasks, setTasks }) => {
     setTasks(editedTasktaskList);
   };
 
+  const handleStartTask = (id) => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, status: 'In-progress' };
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+  };
+
+  const handleCompletedTask = (id) => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === id) {
+        if (task.status === 'Completed') {
+          return { ...task, status: 'Incomplete' };
+        }
+        return { ...task, status: 'Completed' };
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+  };
+
   const toggleTaskStatus = (id) => {
     const updatedTasks = tasks.map((task) => {
       if (task.id === id) {
-        return {
-          ...task,
-          status: task.status === "Pending" ? "Completed" : "Pending",
-        };
+        let newStatus;
+        switch (task.status) {
+          case 'Incomplete':
+            newStatus = 'In-progress';
+            break;
+          case 'In-progress':
+            newStatus = 'Completed';
+            break;
+          case 'Completed':
+            newStatus = 'Incomplete';
+            break;
+          default:
+            newStatus = 'Incomplete';
+        }
+        return { ...task, status: newStatus };
       }
       return task;
     });
@@ -63,8 +102,8 @@ const TasksList = ({ tasks, setTasks }) => {
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
 
-    if (day < 10) day = "0" + day;
-    if (month < 10) month = "0" + month;
+    if (day < 10) day = '0' + day;
+    if (month < 10) month = '0' + month;
     const updatedTasks = tasks.map((task) => {
       if (task.id === id) {
         return { ...task, date: `${day}/${month}/${year}` };
@@ -76,6 +115,12 @@ const TasksList = ({ tasks, setTasks }) => {
 
   return (
     <>
+      <button
+        className="bg-red-500 text-white font-bold py-2 px-4 rounded-xl mb-4"
+        onClick={deleteAllCompletedTasks}
+      >
+        Clear Completed Tasks
+      </button>
       <ListManager
         onDragEnd={handleDragEnd}
         direction="horizontal"
@@ -94,6 +139,8 @@ const TasksList = ({ tasks, setTasks }) => {
               handleEditTask={editTask}
               handleToggleTaskStatus={toggleTaskStatus}
               handleSetDate={setDate}
+              handleStartTask={handleStartTask}
+              handleCompletedTask={handleCompletedTask}
             />
           );
         }}

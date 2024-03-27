@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const AddTask = ({ handleAddTask }) => {
-  const [taskTitle, setTaskTitle] = useState("");
-  const [taskContent, setTaskContent] = useState("");
+  const [taskTitle, setTaskTitle] = useState('');
+  const [taskContent, setTaskContent] = useState('');
   const [titleError, setTitleError] = useState(false);
   const characterLimit = 200;
   const titleCharacterLimit = 30;
@@ -23,8 +23,8 @@ const AddTask = ({ handleAddTask }) => {
   const handleSaveClick = () => {
     if (taskTitle.trim().length > 0) {
       handleAddTask(taskTitle, taskContent);
-      setTaskTitle("");
-      setTaskContent("");
+      setTaskTitle('');
+      setTaskContent('');
       setTitleError(false);
     } else {
       setTitleError(true);
@@ -60,7 +60,7 @@ const AddTask = ({ handleAddTask }) => {
           className="animate-bounce bg-gray-300 border-none rounded-lg px-2 py-1 hover:bg-gray-200 cursor-pointer"
           onClick={handleSaveClick}
         >
-          Save
+          Add
         </button>
       </div>
     </div>
